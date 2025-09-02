@@ -1,4 +1,5 @@
 import pygame
+import random
 pygame.init()
 
 SCREEN_WIDTH = 800
@@ -14,6 +15,9 @@ ant_size = 5
 ant_dx = 0.05
 ant_dy = 0.05
 
+last_move_time = 0
+move_interval = 1000
+
 running = True
 while running:
     for event in pygame.event.get():
@@ -26,6 +30,11 @@ while running:
 
     ant_x += ant_dx
     ant_y += ant_dy
+    current_time = pygame.time.get_ticks()
+    if current_time - last_move_time > move_interval:
+        ant_dx = random.choice([-ant_dx, ant_dx])
+        ant_dy = random.choice([-ant_dy, ant_dy])
+        last_move_time = current_time
 
     if ant_x < 0 or ant_x > SCREEN_WIDTH:
         ant_dx = -ant_dx
