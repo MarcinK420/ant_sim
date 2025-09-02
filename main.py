@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 pygame.init()
 
 SCREEN_WIDTH = 800
@@ -12,8 +13,8 @@ ant_y = SCREEN_HEIGHT // 2
 ant_color = (255, 0, 0)
 ant_size = 5
 # Prędkość mrówki
-ant_dx = 0.05
-ant_dy = 0.05
+ant_speed = 0.05
+ant_angle = random.uniform(0, 2 * math.pi)
 
 last_move_time = 0
 move_interval = 1000
@@ -25,20 +26,19 @@ while running:
             running = False
 
     screen.fill((0, 0, 0))
-    pygame.draw.circle(screen, ant_color, (ant_x, ant_y), ant_size)
+    pygame.draw.circle(screen, ant_color, (int(ant_x), int(ant_y)), ant_size)
     pygame.display.flip()
 
-    ant_x += ant_dx
-    ant_y += ant_dy
+    ant_x += ant_speed * math.cos(ant_angle)
+    ant_y += ant_speed * math.sin(ant_angle)
     current_time = pygame.time.get_ticks()
     if current_time - last_move_time > move_interval:
-        ant_dx = random.choice([-ant_dx, ant_dx])
-        ant_dy = random.choice([-ant_dy, ant_dy])
+        ant_angle = random.uniform(0, 2 * math.pi)
         last_move_time = current_time
 
     if ant_x < 0 or ant_x > SCREEN_WIDTH:
-        ant_dx = -ant_dx
+        ant_angle = math.pi - ant_angle
     if ant_y < 0 or ant_y > SCREEN_HEIGHT:
-        ant_dy = -ant_dy
+        ant_angle = -ant_angle
 
 pygame.quit()
