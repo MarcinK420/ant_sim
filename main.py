@@ -19,6 +19,16 @@ ant_angle = random.uniform(0, 2 * math.pi)
 last_move_time = 0
 move_interval = 1000
 
+food_positions = []
+food_color = (0, 255, 0)
+food_size = 3
+food_count = 20
+
+for _ in range(food_count):
+    food_x = random.randint(food_size, SCREEN_WIDTH - food_size)
+    food_y = random.randint(food_size, SCREEN_HEIGHT - food_size)
+    food_positions.append((food_x, food_y))
+
 running = True
 while running:
     for event in pygame.event.get():
@@ -26,7 +36,18 @@ while running:
             running = False
 
     screen.fill((0, 0, 0))
+
+    for food_pos in food_positions:
+        pygame.draw.circle(screen, food_color, food_pos, food_size)
+
     pygame.draw.circle(screen, ant_color, (int(ant_x), int(ant_y)), ant_size)
+
+    for i, food_pos in enumerate(food_positions):
+        distance = math.sqrt((food_pos[0] - ant_x) ** 2 + (food_pos[1] - ant_y) ** 2)
+        if distance < food_size + ant_size:
+            food_positions.pop(i)
+            break
+
     pygame.display.flip()
 
     ant_x += ant_speed * math.cos(ant_angle)
